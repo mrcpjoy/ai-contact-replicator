@@ -70,6 +70,9 @@ const ContactForm = () => {
           <p className="text-lg text-muted-foreground">
             Need quick answers? Our AI Concierge is ready to help! Click the button in the bottom right corner for instant assistance.
           </p>
+          <p className="text-sm text-muted-foreground/80 mt-2">
+            Our AI Concierge provides general information only, not legal advice.
+          </p>
         </div>
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Get in Touch</h2>
         
