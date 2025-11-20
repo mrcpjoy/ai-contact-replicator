@@ -61,6 +61,11 @@ const ContactForm = () => {
   return (
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4 max-w-2xl">
+        <div className="text-center mb-8">
+          <p className="text-lg text-muted-foreground mb-4">
+            Need quick answers? Speak to our AI Concierge by clicking the chat button in the bottom right corner.
+          </p>
+        </div>
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Get in Touch</h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">

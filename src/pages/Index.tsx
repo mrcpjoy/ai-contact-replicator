@@ -1,6 +1,7 @@
 import ContactHero from "@/components/ContactHero";
 import ContactForm from "@/components/ContactForm";
 import OfficeLocations from "@/components/OfficeLocations";
+import AIChatWidget from "@/components/AIChatWidget";
 
 const Index = () => {
   return (
@@ -8,6 +9,7 @@ const Index = () => {
       <ContactHero />
       <ContactForm />
       <OfficeLocations />
+      <AIChatWidget />
     </div>
   );
 };
