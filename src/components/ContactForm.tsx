@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { MessageCircle } from "lucide-react";
 
 const ContactForm = () => {
   const { toast } = useToast();
@@ -61,9 +62,13 @@ const ContactForm = () => {
   return (
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4 max-w-2xl">
-        <div className="text-center mb-8">
-          <p className="text-lg text-muted-foreground mb-4">
-            Need quick answers? Speak to our AI Concierge by clicking the chat button in the bottom right corner.
+        <div className="text-center mb-12 p-6 bg-primary/5 rounded-lg border-2 border-primary/20">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <MessageCircle className="h-6 w-6 text-primary" />
+            <h3 className="text-2xl font-bold text-primary">AI Concierge Available</h3>
+          </div>
+          <p className="text-lg text-muted-foreground">
+            Need quick answers? Our AI Concierge is ready to help! Click the button in the bottom right corner for instant assistance.
           </p>
         </div>
         <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Get in Touch</h2>

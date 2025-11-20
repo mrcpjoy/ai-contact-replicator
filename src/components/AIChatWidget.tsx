@@ -93,17 +93,24 @@ const AIChatWidget = () => {
 
   return (
     <>
-      {/* Floating Chat Button */}
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
+      {/* Floating Chat Button with Label */}
+      <div
         className={cn(
-          "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg transition-transform hover:scale-110 z-50",
-          isOpen && "scale-0"
+          "fixed bottom-6 right-6 z-50 transition-all duration-300",
+          isOpen && "scale-0 opacity-0"
         )}
-        size="icon"
       >
-        <MessageCircle className="h-6 w-6" />
-      </Button>
+        {/* Pulse animation ring */}
+        <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+        
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          className="relative h-16 px-6 rounded-full shadow-2xl hover:shadow-primary/50 transition-all hover:scale-105 flex items-center gap-3 text-base font-semibold"
+        >
+          <MessageCircle className="h-6 w-6" />
+          <span>AI Concierge</span>
+        </Button>
+      </div>
 
       {/* Chat Interface */}
       {isOpen && (
