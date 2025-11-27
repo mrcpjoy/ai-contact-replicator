@@ -223,7 +223,7 @@ const AIChatWidget = () => {
             <div className="flex gap-2 -mx-1">
               <Button
                 variant="outline"
-                className="flex-1 text-sm border-pink-500 text-pink-500 hover:bg-pink-50 hover:text-pink-600"
+                className="flex-1 text-sm border-primary text-primary hover:bg-primary/10 hover:text-primary"
                 onClick={() => window.open('https://api.theadmarket.com/widget/booking/hNerAKSDNHiBruFn4ieF', '_blank')}
               >
                 <Calendar className="h-4 w-4 mr-2" />
@@ -231,7 +231,7 @@ const AIChatWidget = () => {
               </Button>
               <Button
                 variant="outline"
-                className="flex-1 text-sm border-pink-500 text-pink-500 hover:bg-pink-50 hover:text-pink-600"
+                className="flex-1 text-sm border-primary text-primary hover:bg-primary/10 hover:text-primary"
                 onClick={() => window.open('https://api.theadmarket.com/widget/form/fv2PaXSUdZqj6cmlfTmo', '_blank')}
               >
                 <FileText className="h-4 w-4 mr-2" />
