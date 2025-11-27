@@ -54,14 +54,15 @@ const AIChatWidget = () => {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to get response from AI");
-      }
-
       const data = await response.json();
       console.log('n8n response:', data);
       
-      // Check if we got an actual answer or just a workflow confirmation
+      // Check for n8n errors
+      if (!response.ok || data.code !== undefined || data.message?.includes('error') || data.message?.includes('Error')) {
+        throw new Error(data.message || "n8n workflow error: " + JSON.stringify(data));
+      }
+      
+      // Check if we got an actual answer
       if (!data.answer) {
         throw new Error("n8n workflow returned no answer. Response: " + JSON.stringify(data));
       }
