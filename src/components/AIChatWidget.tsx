@@ -44,17 +44,13 @@ const AIChatWidget = () => {
     setIsLoading(true);
 
     try {
-      // TODO: Replace with your n8n webhook URL
-      const n8nWebhookUrl = "YOUR_N8N_WEBHOOK_URL";
-      
-      const response = await fetch(n8nWebhookUrl, {
+      const response = await fetch('https://chrisjoy.app.n8n.cloud/webhook/chat', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: userMessage.content,
-          conversationHistory: messages,
+          question: userMessage.content
         }),
       });
 
@@ -67,13 +63,23 @@ const AIChatWidget = () => {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: data.response || data.message || "I received your message.",
+        content: data.answer,
         timestamp: new Date(),
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error("Error sending message:", error);
+      
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "Sorry, I encountered an error. Please try again or call us on 01827 317071.",
+        timestamp: new Date(),
+      };
+      
+      setMessages((prev) => [...prev, errorMessage]);
+      
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
