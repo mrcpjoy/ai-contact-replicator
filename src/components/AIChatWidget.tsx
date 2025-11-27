@@ -57,14 +57,10 @@ const AIChatWidget = () => {
       const data = await response.json();
       console.log('n8n response:', data);
       
-      // Check for n8n errors
-      if (!response.ok || data.code !== undefined || data.message?.includes('error') || data.message?.includes('Error')) {
-        throw new Error(data.message || "n8n workflow error: " + JSON.stringify(data));
-      }
-      
       // Check if we got an actual answer
       if (!data.answer) {
-        throw new Error("n8n workflow returned no answer. Response: " + JSON.stringify(data));
+        console.error('No answer in response:', data);
+        throw new Error("No response received from AI");
       }
       
       const assistantMessage: Message = {
