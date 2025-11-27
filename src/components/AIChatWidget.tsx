@@ -59,6 +59,12 @@ const AIChatWidget = () => {
       }
 
       const data = await response.json();
+      console.log('n8n response:', data);
+      
+      // Check if we got an actual answer or just a workflow confirmation
+      if (!data.answer) {
+        throw new Error("n8n workflow returned no answer. Response: " + JSON.stringify(data));
+      }
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
