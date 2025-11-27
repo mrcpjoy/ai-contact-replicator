@@ -60,15 +60,16 @@ const AIChatWidget = () => {
       // Handle array response from n8n
       const responseData = Array.isArray(data) ? data[0] : data;
       
-      if (!responseData?.answer) {
-        console.error('No answer field in response:', responseData);
-        throw new Error("No answer received from AI");
+      // Gracefully handle missing or empty answers
+      let answer = "Sorry, I couldn’t find a clear answer to that just now. Please try again or call us on 01827 317071.";
+      if (responseData && typeof responseData === "object" && "answer" in responseData && responseData.answer) {
+        answer = String(responseData.answer);
       }
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: responseData.answer,
+        content: answer,
         timestamp: new Date(),
       };
 
