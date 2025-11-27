@@ -54,21 +54,34 @@ const AIChatWidget = () => {
         }),
       });
 
-      const data = await response.json();
-      console.log('n8n response:', data);
+      const raw = await response.text();
+      console.log('n8n raw response:', raw);
 
+      let parsed: any = null;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (e) {
+        console.error('Failed to parse JSON from n8n:', e);
+      }
+
+      const data = parsed ?? raw;
       const responsePayload = Array.isArray(data) ? data[0] : data;
-      
-      // Check if we got an actual answer
-      if (!responsePayload.answer) {
-        console.error('No answer in response:', responsePayload);
-        throw new Error("No response received from AI");
+
+      // Safely pick an answer string
+      let answer: string;
+      if (responsePayload && typeof responsePayload === 'object' && 'answer' in responsePayload) {
+        answer = String(responsePayload.answer);
+      } else if (typeof responsePayload === 'string') {
+        answer = responsePayload;
+      } else {
+        answer = 'Sorry, I could not understand the response from our AI right now.';
+        console.error('Unexpected n8n response shape:', data);
       }
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: responsePayload.answer,
+        content: answer,
         timestamp: new Date(),
       };
 
