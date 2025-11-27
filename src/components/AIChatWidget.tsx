@@ -220,7 +220,7 @@ const AIChatWidget = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-2 -mx-1">
               <Button
                 variant="outline"
                 className="flex-1 text-sm border-pink-500 text-pink-500 hover:bg-pink-50 hover:text-pink-600"
