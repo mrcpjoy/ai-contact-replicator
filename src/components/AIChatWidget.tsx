@@ -44,7 +44,7 @@ const AIChatWidget = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://chrisjoy.app.n8n.cloud/webhook-test/chat', {
+      const response = await fetch('https://chrisjoy.app.n8n.cloud/webhook/chat', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
