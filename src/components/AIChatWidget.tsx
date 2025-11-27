@@ -56,17 +56,19 @@ const AIChatWidget = () => {
 
       const data = await response.json();
       console.log('n8n response:', data);
+
+      const responsePayload = Array.isArray(data) ? data[0] : data;
       
       // Check if we got an actual answer
-      if (!data.answer) {
-        console.error('No answer in response:', data);
+      if (!responsePayload.answer) {
+        console.error('No answer in response:', responsePayload);
         throw new Error("No response received from AI");
       }
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: data.answer,
+        content: responsePayload.answer,
         timestamp: new Date(),
       };
 
