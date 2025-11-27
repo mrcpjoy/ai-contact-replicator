@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Calendar, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -19,14 +19,12 @@ const AIChatWidget = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const sendMessage = async () => {
@@ -144,7 +142,7 @@ const AIChatWidget = () => {
 
           <CardContent className="flex-1 flex flex-col p-4 gap-4 overflow-hidden">
             {/* Messages Area */}
-            <ScrollArea className="flex-1 pr-4" ref={scrollRef}>
+            <ScrollArea className="flex-1 pr-4">
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full text-center">
                   <div className="space-y-2">
@@ -193,6 +191,7 @@ const AIChatWidget = () => {
                       </div>
                     </div>
                   )}
+                  <div ref={messagesEndRef} />
                 </div>
               )}
             </ScrollArea>
@@ -217,6 +216,26 @@ const AIChatWidget = () => {
                 ) : (
                   <Send className="h-4 w-4" />
                 )}
+              </Button>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1 text-sm border-pink-500 text-pink-500 hover:bg-pink-50 hover:text-pink-600"
+                onClick={() => window.open('https://api.theadmarket.com/widget/booking/hNerAKSDNHiBruFn4ieF', '_blank')}
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                Book Appointment
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1 text-sm border-pink-500 text-pink-500 hover:bg-pink-50 hover:text-pink-600"
+                onClick={() => window.open('https://api.theadmarket.com/widget/form/fv2PaXSUdZqj6cmlfTmo', '_blank')}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Submit Enquiry
               </Button>
             </div>
           </CardContent>
