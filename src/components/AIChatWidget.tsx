@@ -17,8 +17,12 @@ interface Message {
 
 const MAX_MESSAGE_LENGTH = 1000;
 
-const AIChatWidget = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface AIChatWidgetProps {
+  defaultOpen?: boolean;
+}
+
+const AIChatWidget = ({ defaultOpen = false }: AIChatWidgetProps) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
