@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageCircle, X, Send, Loader2, Calendar, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: string;
@@ -13,6 +14,8 @@ interface Message {
   content: string;
   timestamp: Date;
 }
+
+const MAX_MESSAGE_LENGTH = 1000;
 
 const AIChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,13 +30,33 @@ const AIChatWidget = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const sanitizeInput = (text: string): string => {
+    // Trim whitespace
+    let sanitized = text.trim();
+    // Remove control characters (except newlines and tabs)
+    sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+    return sanitized;
+  };
+
   const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+    const sanitizedInput = sanitizeInput(input);
+    
+    if (!sanitizedInput || isLoading) return;
+
+    // Client-side validation
+    if (sanitizedInput.length > MAX_MESSAGE_LENGTH) {
+      toast({
+        title: "Message too long",
+        description: `Please keep your message under ${MAX_MESSAGE_LENGTH} characters.`,
+        variant: "destructive",
+      });
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
-      content: input.trim(),
+      content: sanitizedInput,
       timestamp: new Date(),
     };
 
@@ -42,33 +65,24 @@ const AIChatWidget = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://chrisjoy.app.n8n.cloud/webhook/chat', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          question: userMessage.content
-        }),
+      const { data, error } = await supabase.functions.invoke('chat-proxy', {
+        body: { question: userMessage.content }
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (error) {
+        throw new Error(error.message || 'Failed to get response');
       }
-
-      const text = await response.text();
-      if (!text) {
-        throw new Error('Empty response from server');
-      }
-
-      const data = JSON.parse(text);
-      console.log('n8n response:', data);
 
       // Handle array response from n8n
       const responseData = Array.isArray(data) ? data[0] : data;
       
+      // Check for error response from edge function
+      if (responseData?.error) {
+        throw new Error(responseData.error);
+      }
+      
       // Gracefully handle missing or empty answers
-      let answer = "Sorry, I couldn’t find a clear answer to that just now. Please try again or call us on 01827 317071.";
+      let answer = "Sorry, I couldn't find a clear answer to that just now. Please try again or call us on 01827 317071.";
       if (responseData && typeof responseData === "object" && "answer" in responseData && responseData.answer) {
         answer = String(responseData.answer);
       }
@@ -82,8 +96,6 @@ const AIChatWidget = () => {
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      console.error("Error sending message:", error);
-      
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
@@ -95,7 +107,7 @@ const AIChatWidget = () => {
       
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to send message. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -107,6 +119,14 @@ const AIChatWidget = () => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Limit input length on the client side as well
+    if (value.length <= MAX_MESSAGE_LENGTH) {
+      setInput(value);
     }
   };
 
@@ -209,11 +229,12 @@ const AIChatWidget = () => {
             <div className="flex gap-2">
               <Input
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={handleInputChange}
                 onKeyPress={handleKeyPress}
                 placeholder="Type your message..."
                 disabled={isLoading}
                 className="flex-1"
+                maxLength={MAX_MESSAGE_LENGTH}
               />
               <Button
                 onClick={sendMessage}
