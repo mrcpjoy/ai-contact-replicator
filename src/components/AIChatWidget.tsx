@@ -19,9 +19,10 @@ const MAX_MESSAGE_LENGTH = 1000;
 
 interface AIChatWidgetProps {
   defaultOpen?: boolean;
+  embedded?: boolean;
 }
 
-const AIChatWidget = ({ defaultOpen = false }: AIChatWidgetProps) => {
+const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetProps) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -136,28 +137,35 @@ const AIChatWidget = ({ defaultOpen = false }: AIChatWidgetProps) => {
 
   return (
     <>
-      {/* Floating Chat Button with Label */}
-      <div
-        className={cn(
-          "fixed bottom-6 right-6 z-50 transition-all duration-300",
-          isOpen && "scale-0 opacity-0"
-        )}
-      >
-        {/* Pulse animation ring */}
-        <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
-        
-        <Button
-          onClick={() => setIsOpen(!isOpen)}
-          className="relative h-16 px-6 rounded-full shadow-2xl hover:shadow-primary/50 transition-all hover:scale-105 flex items-center gap-3 text-base font-semibold"
+      {/* Floating Chat Button with Label - Hidden when embedded */}
+      {!embedded && (
+        <div
+          className={cn(
+            "fixed bottom-6 right-6 z-50 transition-all duration-300",
+            isOpen && "scale-0 opacity-0"
+          )}
         >
-          <MessageCircle className="h-6 w-6" />
-          <span>AI Concierge</span>
-        </Button>
-      </div>
+          {/* Pulse animation ring */}
+          <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+          
+          <Button
+            onClick={() => setIsOpen(!isOpen)}
+            className="relative h-16 px-6 rounded-full shadow-2xl hover:shadow-primary/50 transition-all hover:scale-105 flex items-center gap-3 text-base font-semibold"
+          >
+            <MessageCircle className="h-6 w-6" />
+            <span>AI Concierge</span>
+          </Button>
+        </div>
+      )}
 
       {/* Chat Interface */}
       {isOpen && (
-        <Card className="fixed bottom-6 right-6 w-96 h-[600px] shadow-2xl flex flex-col z-50 border-2">
+        <Card className={cn(
+          "shadow-2xl flex flex-col z-50 border-2",
+          embedded 
+            ? "fixed bottom-0 right-0 w-full h-full max-w-[420px] max-h-[650px] rounded-none sm:rounded-lg" 
+            : "fixed bottom-6 right-6 w-96 h-[600px]"
+        )}>
           <CardHeader className="bg-primary text-primary-foreground rounded-t-lg flex flex-row items-center justify-between py-4">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
