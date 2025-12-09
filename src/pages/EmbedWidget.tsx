@@ -1,11 +1,20 @@
+import { useEffect } from "react";
 import AIChatWidget from "@/components/AIChatWidget";
 
 const EmbedWidget = () => {
-  return (
-    <div className="fixed inset-0 bg-transparent">
-      <AIChatWidget defaultOpen={true} />
-    </div>
-  );
+  useEffect(() => {
+    // Make body transparent for iframe embedding
+    document.body.style.background = "transparent";
+    document.documentElement.style.background = "transparent";
+    
+    return () => {
+      // Restore on unmount
+      document.body.style.background = "";
+      document.documentElement.style.background = "";
+    };
+  }, []);
+
+  return <AIChatWidget defaultOpen={true} embedded={true} />;
 };
 
 export default EmbedWidget;
