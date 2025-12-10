@@ -161,9 +161,9 @@ const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetPro
       {/* Chat Interface */}
       {isOpen && (
         <Card className={cn(
-          "shadow-2xl flex flex-col z-50 border-2",
+          "shadow-2xl flex flex-col z-50 border-2 bg-card",
           embedded 
-            ? "fixed bottom-0 right-0 w-full h-full max-w-[420px] max-h-[650px] rounded-none sm:rounded-lg" 
+            ? "fixed bottom-0 right-0 w-full h-full max-w-[420px] max-h-[650px] rounded-lg !bg-background" 
             : "fixed bottom-6 right-6 w-96 h-[600px]"
         )}>
           <CardHeader className="bg-primary text-primary-foreground rounded-t-lg flex flex-row items-center justify-between py-4">
