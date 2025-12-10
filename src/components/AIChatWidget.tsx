@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageCircle, X, Send, Loader2, Calendar, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -155,28 +155,30 @@ const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetPro
 
       {/* Chat Interface */}
       {isOpen && (
-        <Card className={cn(
-          "shadow-2xl flex flex-col z-50 border-0",
+        <div className={cn(
+          "flex flex-col z-50 overflow-hidden",
           embedded 
-            ? "fixed bottom-0 right-0 w-[420px] h-[650px] rounded-lg bg-transparent" 
-            : "fixed bottom-6 right-6 z-50 w-[90vw] h-[80vh] max-w-[420px] max-h-[650px] md:w-96 md:h-[600px] md:max-w-none md:max-h-none rounded-lg bg-card"
+            ? "w-[420px] h-[650px] max-w-full" 
+            : "fixed bottom-6 right-6 w-[90vw] h-[80vh] max-w-[420px] max-h-[650px] md:w-96 md:h-[600px] md:max-w-none md:max-h-none shadow-2xl rounded-lg"
         )}>
-          <CardHeader className="bg-primary text-primary-foreground rounded-t-lg flex flex-row items-center justify-between py-4 shrink-0">
+          <div className="bg-primary text-primary-foreground rounded-t-lg flex flex-row items-center justify-between py-4 px-6 shrink-0">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
-              <CardTitle className="text-lg">AI Concierge</CardTitle>
+              <span className="text-lg font-semibold">AI Concierge</span>
             </div>
-            <Button
-              onClick={() => setIsOpen(false)}
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </CardHeader>
+            {!embedded && (
+              <Button
+                onClick={() => setIsOpen(false)}
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            )}
+          </div>
 
-          <CardContent className="flex-1 flex flex-col p-4 gap-4 overflow-hidden bg-card rounded-b-lg">
+          <div className="flex-1 flex flex-col p-4 gap-4 overflow-hidden bg-card rounded-b-lg">
             {/* Messages Area */}
             <ScrollArea className="flex-1 pr-4">
               {messages.length === 0 ? (
@@ -272,11 +274,11 @@ const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetPro
                 onClick={() => window.open('https://api.theadmarket.com/widget/form/fv2PaXSUdZqj6cmlfTmo', '_blank')}
               >
                 <FileText className="h-4 w-4 mr-2" />
-                Submit Enquiry
-              </Button>
+              Submit Enquiry
+            </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
     </>
   );

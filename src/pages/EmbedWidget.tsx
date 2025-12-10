@@ -3,36 +3,25 @@ import AIChatWidget from "@/components/AIChatWidget";
 
 const EmbedWidget = () => {
   useEffect(() => {
-    // Add transparent class to html element for CSS targeting
-    document.documentElement.classList.add("embed-transparent");
+    // Make everything transparent for iframe embedding
+    document.documentElement.style.cssText = "background: transparent !important; background-color: transparent !important;";
+    document.body.style.cssText = "background: transparent !important; background-color: transparent !important; margin: 0; padding: 0;";
     
-    // Make body and html transparent for iframe embedding
-    document.body.style.background = "transparent";
-    document.body.style.backgroundColor = "transparent";
-    document.documentElement.style.background = "transparent";
-    document.documentElement.style.backgroundColor = "transparent";
-    
-    // Also set the root element transparent
     const root = document.getElementById("root");
     if (root) {
-      root.style.background = "transparent";
-      root.style.backgroundColor = "transparent";
+      root.style.cssText = "background: transparent !important; background-color: transparent !important;";
     }
     
     return () => {
-      // Restore on unmount
-      document.documentElement.classList.remove("embed-transparent");
-      document.body.style.background = "";
-      document.body.style.backgroundColor = "";
-      document.documentElement.style.background = "";
-      document.documentElement.style.backgroundColor = "";
+      document.documentElement.style.cssText = "";
+      document.body.style.cssText = "";
       if (root) {
-        root.style.background = "";
-        root.style.backgroundColor = "";
+        root.style.cssText = "";
       }
     };
   }, []);
 
+  // Render ONLY the widget component - no wrapper containers
   return <AIChatWidget defaultOpen={true} embedded={true} />;
 };
 
