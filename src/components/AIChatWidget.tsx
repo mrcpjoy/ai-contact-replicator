@@ -23,7 +23,8 @@ interface AIChatWidgetProps {
 }
 
 const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetProps) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  // Embedded widgets should start CLOSED (minimized button only)
+  const [isOpen, setIsOpen] = useState(embedded ? false : defaultOpen);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -137,17 +138,20 @@ const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetPro
 
   return (
     <>
-      {/* Floating Chat Button - Only visible when closed and NOT embedded */}
-      {!embedded && !isOpen && (
-        <div className="fixed bottom-6 right-6 z-50">
+      {/* Floating Chat Button - visible when closed (for both embedded and non-embedded) */}
+      {!isOpen && (
+        <div className={cn(
+          "z-50",
+          embedded ? "relative" : "fixed bottom-6 right-6"
+        )}>
           {/* Pulse animation ring */}
           <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
           
           <Button
             onClick={() => setIsOpen(true)}
-            className="relative h-16 px-6 rounded-full shadow-2xl hover:shadow-primary/50 transition-all hover:scale-105 flex items-center gap-3 text-base font-semibold"
+            className="relative h-14 px-5 rounded-full shadow-2xl hover:shadow-primary/50 transition-all hover:scale-105 flex items-center gap-2 text-base font-semibold"
           >
-            <MessageCircle className="h-6 w-6" />
+            <MessageCircle className="h-5 w-5" />
             <span>AI Concierge</span>
           </Button>
         </div>
@@ -156,26 +160,25 @@ const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetPro
       {/* Chat Interface */}
       {isOpen && (
         <div className={cn(
-          "flex flex-col z-50 overflow-hidden",
+          "flex flex-col z-50 overflow-hidden shadow-2xl rounded-lg",
           embedded 
-            ? "w-[420px] h-[650px] max-w-full" 
-            : "fixed bottom-6 right-6 w-[90vw] h-[80vh] max-w-[420px] max-h-[650px] md:w-96 md:h-[600px] md:max-w-none md:max-h-none shadow-2xl rounded-lg"
+            ? "w-[90vw] h-[85vh] max-w-[420px] max-h-[650px]" 
+            : "fixed bottom-6 right-6 w-[90vw] h-[80vh] max-w-[420px] max-h-[650px] md:w-96 md:h-[600px] md:max-w-none md:max-h-none"
         )}>
           <div className="bg-primary text-primary-foreground rounded-t-lg flex flex-row items-center justify-between py-4 px-6 shrink-0">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
               <span className="text-lg font-semibold">AI Concierge</span>
             </div>
-            {!embedded && (
-              <Button
-                onClick={() => setIsOpen(false)}
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            )}
+            {/* Always show close button */}
+            <Button
+              onClick={() => setIsOpen(false)}
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+            >
+              <X className="h-5 w-5" />
+            </Button>
           </div>
 
           <div className="flex-1 flex flex-col p-4 gap-4 overflow-hidden bg-card rounded-b-lg">
