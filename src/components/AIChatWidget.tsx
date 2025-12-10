@@ -137,19 +137,14 @@ const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetPro
 
   return (
     <>
-      {/* Floating Chat Button with Label - Hidden when embedded */}
-      {!embedded && (
-        <div
-          className={cn(
-            "fixed bottom-6 right-6 z-50 transition-all duration-300",
-            isOpen && "scale-0 opacity-0"
-          )}
-        >
+      {/* Floating Chat Button - Only visible when closed and NOT embedded */}
+      {!embedded && !isOpen && (
+        <div className="fixed bottom-6 right-6 z-50">
           {/* Pulse animation ring */}
           <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
           
           <Button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen(true)}
             className="relative h-16 px-6 rounded-full shadow-2xl hover:shadow-primary/50 transition-all hover:scale-105 flex items-center gap-3 text-base font-semibold"
           >
             <MessageCircle className="h-6 w-6" />
@@ -161,12 +156,12 @@ const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetPro
       {/* Chat Interface */}
       {isOpen && (
         <Card className={cn(
-          "shadow-2xl flex flex-col z-50 border-2 bg-card",
+          "shadow-2xl flex flex-col z-50 border-0",
           embedded 
-            ? "fixed bottom-0 right-0 w-full h-full max-w-[420px] max-h-[650px] rounded-lg !bg-background" 
-            : "fixed bottom-6 right-6 w-96 h-[600px]"
+            ? "fixed bottom-0 right-0 w-[420px] h-[650px] rounded-lg bg-transparent" 
+            : "fixed bottom-6 right-6 z-50 w-[90vw] h-[80vh] max-w-[420px] max-h-[650px] md:w-96 md:h-[600px] md:max-w-none md:max-h-none rounded-lg bg-card"
         )}>
-          <CardHeader className="bg-primary text-primary-foreground rounded-t-lg flex flex-row items-center justify-between py-4">
+          <CardHeader className="bg-primary text-primary-foreground rounded-t-lg flex flex-row items-center justify-between py-4 shrink-0">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
               <CardTitle className="text-lg">AI Concierge</CardTitle>
@@ -177,11 +172,11 @@ const AIChatWidget = ({ defaultOpen = false, embedded = false }: AIChatWidgetPro
               size="icon"
               className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </Button>
           </CardHeader>
 
-          <CardContent className="flex-1 flex flex-col p-4 gap-4 overflow-hidden">
+          <CardContent className="flex-1 flex flex-col p-4 gap-4 overflow-hidden bg-card rounded-b-lg">
             {/* Messages Area */}
             <ScrollArea className="flex-1 pr-4">
               {messages.length === 0 ? (
