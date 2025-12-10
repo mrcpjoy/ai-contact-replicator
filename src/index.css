@@ -109,3 +109,10 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Transparent background for iframe embedding */
+.embed-transparent,
+.embed-transparent body,
+.embed-transparent #root {
+  background: transparent !important;
+}
